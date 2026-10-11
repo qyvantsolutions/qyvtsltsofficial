@@ -131,8 +131,7 @@
 
                     <div class="sidebar-bottom">
                         <img src="logo.png" alt="" class="sidebar-logo">
-                        <span>DIGITAL SOLUTIONS FOR WHAT’S NEXT.
-</span>
+                        <span>DIGITAL SOLUTIONS FOR WHAT’S NEXT.</span>
                     </div>
 
                 </aside>
@@ -158,9 +157,8 @@
                         tabindex="-1"
                     ></div>
 
-                    <!-- FORMSUBMIT FORM -->
+                    <!-- FORMSUBMIT: NORMAL HTML FORM SUBMISSION -->
                     <form
-                        id="inquiryForm"
                         action="https://formsubmit.co/qyvantsolutions.official@gmail.com"
                         method="POST"
                     >
@@ -178,28 +176,11 @@
                             value="table"
                         >
 
-                        <!-- Keep CAPTCHA enabled for spam protection -->
                         <input
                             type="hidden"
                             name="_captcha"
                             value="true"
                         >
-
-                        <!-- Optional redirect after successful submission.
-                             Replace the URL after your website is published.
-                             Do not enable this until the destination exists. -->
-
-                        <!-- SPAM PREVENTION -->
-                        <div class="honeypot" aria-hidden="true">
-                            <label for="website">Leave this field empty</label>
-                            <input
-                                type="text"
-                                id="website"
-                                name="_honey"
-                                tabindex="-1"
-                                autocomplete="off"
-                            >
-                        </div>
 
                         <!-- SECTION 01: CONTACT INFORMATION -->
                         <div class="form-section">
@@ -253,7 +234,7 @@
                                     <input
                                         type="email"
                                         id="email"
-                                        name="Email Address"
+                                        name="Email"
                                         placeholder="you@example.com"
                                         autocomplete="email"
                                         required
@@ -262,7 +243,8 @@
 
                                 <div class="form-field">
                                     <label for="phone">
-                                        Contact Number <span class="required-star">*</span>
+                                        Contact Number
+                                        <span class="required-star">*</span>
                                     </label>
 
                                     <input
@@ -285,10 +267,14 @@
                                 <span class="form-step-number">02</span>
 
                                 <div>
-                                    <h3>What do you need?</h3>
+                                    <h3>
+                                        Select Your Services
+                                        <span class="required-star">*</span>
+                                    </h3>
+
                                     <p>
-                                        Select the service or services
-                                        you're interested in.
+                                        Choose one or more services that best
+                                        match your needs.
                                     </p>
                                 </div>
                             </div>
@@ -453,21 +439,13 @@
 
                             <p>
                                 I agree that the information provided may be
-                                used to respond to my inquiry. <span>*</span>
+                                used to respond to my inquiry.
+                                <span>*</span>
                             </p>
 
                         </div>
 
-                        <!-- Inquiry submission status -->
-                        <div
-                            id="formStatus"
-                            class="form-status"
-                            role="status"
-                            aria-live="polite"
-                            hidden
-                        ></div>
-
-                        <!-- SUBMIT -->
+                        <!-- NORMAL SUBMIT BUTTON -->
                         <button type="submit" class="submit-button">
                             <span class="submit-button-text">
                                 Send My Inquiry
@@ -480,7 +458,8 @@
                         </button>
 
                         <p class="form-footnote">
-                            Please review your details before sending your inquiry.
+                            Please review your details before sending
+                            your inquiry.
                         </p>
 
                     </form>
