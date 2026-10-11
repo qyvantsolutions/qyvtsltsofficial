@@ -227,6 +227,167 @@
                 </div>
             </div>
         </section>
+        <!-- =========================================
+            MEET CHIRP — VIRTUAL RECEPTIONIST
+        ========================================= -->
+
+        <section class="chirp-section" id="about-chirp">
+            <div class="container">
+
+                <!-- Section Heading -->
+                <div class="chirp-section-heading">
+                    <span class="chirp-eyebrow">
+                        <span class="chirp-eyebrow-dot"></span>
+                        MEET THE TEAM
+                    </span>
+
+                    <p class="chirp-heading-note">
+                        A little introduction to your virtual assistant.
+                    </p>
+                </div>
+
+                <!-- Main Chirp Layout -->
+                <div class="chirp-profile">
+
+                    <!-- LEFT: CHIRP IMAGE -->
+                    <div class="chirp-visual">
+
+                        <div class="chirp-visual-glow"></div>
+                        <div class="chirp-orbit chirp-orbit-one"></div>
+                        <div class="chirp-orbit chirp-orbit-two"></div>
+
+                        <span class="chirp-spark chirp-spark-one">✦</span>
+                        <span class="chirp-spark chirp-spark-two">✧</span>
+                        <span class="chirp-spark chirp-spark-three">✦</span>
+
+                        <!-- Main Picture Chirp -->
+                        <!-- Floating Chirp PNG -->
+                        <div class="chirp-image-frame">
+                            <img
+                                src="chirp.png"
+                                alt="Chirp, the virtual receptionist of QYVANT Solutions"
+                                class="chirp-profile-image"
+                                loading="lazy"
+                            >
+                        </div>
+
+
+                        <!-- Floating Status Card -->
+                        <div class="chirp-float-card chirp-float-status">
+                            <span class="chirp-status-icon">✦</span>
+
+                            <span class="chirp-status-copy">
+                                <strong>Meet Chirp</strong>
+                                <small>I'm Here to help you</small>
+                            </span>
+
+                            <span class="chirp-live-dot"></span>
+                        </div>
+
+                        <!-- Floating Identity Card -->
+                        <div class="chirp-float-card chirp-float-identity">
+                            <span class="chirp-identity-icon">
+                                <img src="logo.png" alt="QYVANT Solutions Logo">
+                            </span>
+
+                            <span class="chirp-status-copy">
+                                <strong>QYVANT Solutions</strong>
+                                <small>Virtual Receptionist</small>
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT: ABOUT CHIRP -->
+                    <div class="chirp-content">
+
+                        <span class="chirp-content-label">
+                            YOUR DIGITAL WELCOME PARTNER
+                        </span>
+
+                        <h2>
+                            Meet <span>Chirp.</span><br>
+                            Here to make things easier.
+                        </h2>
+
+                        <p class="chirp-intro">
+                            Every great conversation starts with a warm welcome.
+                            That's where Chirp comes in.
+                        </p>
+
+                        <p class="chirp-description">
+                            Chirp is the virtual receptionist of QYVANT Solutions,
+                            designed to help visitors navigate our website,
+                            discover our services, and find the right next step
+                            for their business needs.
+                        </p>
+
+                        <p class="chirp-description">
+                            Whether you're exploring digital solutions, learning
+                            about our services, or preparing a project inquiry,
+                            Chirp is here to make your first interaction simple,
+                            welcoming, and convenient.
+                        </p>
+
+                        <!-- Chirp Features -->
+                        <div class="chirp-features">
+
+                            <div class="chirp-feature">
+                                <span class="chirp-feature-icon">✧</span>
+
+                                <div>
+                                    <h3>Explore Services</h3>
+                                    <p>Discover the solutions we offer.</p>
+                                </div>
+                            </div>
+
+                            <div class="chirp-feature">
+                                <span class="chirp-feature-icon">↗</span>
+
+                                <div>
+                                    <h3>Find Your Next Step</h3>
+                                    <p>Get guided to the right inquiry page.</p>
+                                </div>
+                            </div>
+
+                            <div class="chirp-feature">
+                                <span class="chirp-feature-icon">♡</span>
+
+                                <div>
+                                    <h3>Get Helpful Answers</h3>
+                                    <p>Find answers to common questions.</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- CTA -->
+                        <button
+                            type="button"
+                            class="chirp-cta"
+                            onclick="document.getElementById('qyvantChatToggle')?.click()"
+                        >
+                            Chat with Chirp
+                            <span aria-hidden="true">↗</span>
+                        </button>
+
+                        <p class="chirp-small-note">
+                            Your first step toward discovering what's possible.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <!-- Bottom Accent -->
+                <div class="chirp-bottom-line">
+                    <span></span>
+                    <p>TECHNOLOGY WITH PURPOSE. IDEAS WITH IMPACT.</p>
+                    <span></span>
+                </div>
+
+            </div>
+        </section>
 
         <!-- SERVICES -->
         <section class="section services-section" id="services">
@@ -515,5 +676,149 @@
         </div>
     </footer>
 
+<!-- =========================================
+     CHIRP CHAT RECEPTIONIST
+========================================= -->
+
+<div class="qyvant-chat-widget" id="qyvantChatWidget">
+
+    <!-- Floating Chat Button -->
+    <button
+        type="button"
+        class="qyvant-chat-toggle"
+        id="qyvantChatToggle"
+        aria-label="Chat with Chirp"
+        aria-expanded="false"
+        aria-controls="qyvantChatPanel"
+    >
+        
+        <span class="qyvant-chat-toggle-icon">
+            <img
+                src="messagechirp.png"
+                alt="Chirp"
+                class="chirp-toggle-avatar"
+            >
+        </span>
+
+        <span class="qyvant-chat-toggle-label">Chat with Chirp</span>
+        <span class="qyvant-chat-online-dot"></span>
+    </button>
+
+    <!-- Chat Panel -->
+    <section
+        class="qyvant-chat-panel"
+        id="qyvantChatPanel"
+        aria-label="Chirp Virtual Receptionist"
+        hidden
+    >
+
+        <!-- Chirp Header -->
+        <div class="qyvant-chat-header">
+
+            <div class="qyvant-chat-avatar">
+                <img
+                    src="messagechirp.png"
+                    alt="Chirp"
+                    class="chirp-avatar-image"
+                >
+                <i></i>
+            </div>
+
+            <div class="qyvant-chat-header-info">
+                <h2>Chirp</h2>
+                <p>
+                    <span class="qyvant-chat-status-dot"></span>
+                    Your virtual receptionist
+                </p>
+            </div>
+
+            <button
+                type="button"
+                class="qyvant-chat-close"
+                id="qyvantChatClose"
+                aria-label="Close chat"
+            >×</button>
+
+        </div>
+
+        <!-- Welcome Message -->
+        <div
+            class="qyvant-chat-messages"
+            id="qyvantChatMessages"
+            role="log"
+            aria-live="polite"
+            aria-relevant="additions"
+        >
+            <div class="qyvant-chat-message bot">
+                <div class="qyvant-chat-bubble">Hi there! I'm Chirp, your virtual receptionist at QYVANT Solutions! 👋
+
+I'm here to help you explore our services, answer common questions, and guide you through submitting an inquiry or appointment request.
+
+What can I help you with today?</div>
+            </div>
+        </div>
+
+        <!-- Suggested Questions -->
+        <div
+            class="qyvant-chat-suggestions"
+            id="qyvantChatSuggestions"
+        >
+            <button
+                type="button"
+                data-chat-question="What services do you offer?"
+            >
+                Our services
+            </button>
+
+            <button
+                type="button"
+                data-chat-question="How do I request an appointment?"
+            >
+                Appointment
+            </button>
+
+            <button
+                type="button"
+                data-chat-question="How do I send an inquiry?"
+            >
+                Send an inquiry
+            </button>
+        </div>
+
+        <!-- Message Input -->
+        <form
+            class="qyvant-chat-form"
+            id="qyvantChatForm"
+        >
+            <label
+                class="qyvant-chat-sr-only"
+                for="qyvantChatInput"
+            >
+                Type your message
+            </label>
+
+            <input
+                type="text"
+                id="qyvantChatInput"
+                name="message"
+                placeholder="Ask Chirp a question..."
+                autocomplete="off"
+                maxlength="500"
+                required
+            >
+
+            <button
+                type="submit"
+                class="qyvant-chat-send"
+                aria-label="Send message"
+            >➤</button>
+        </form>
+
+        <div class="qyvant-chat-footer">
+            Powered by QYVANT Solutions
+        </div>
+
+    </section>
+</div>
 </body>
 </html>
