@@ -507,3 +507,354 @@ function initFormEnhancements() {
         });
     });
 }
+
+
+/* =========================================================
+   13. CHIRP CHAT RECEPTIONIST
+   Scoped to pages containing the Chirp widget.
+========================================================= */
+
+(function () {
+    "use strict";
+
+    function initChirpChat() {
+        const toggle = document.getElementById("qyvantChatToggle");
+        const panel = document.getElementById("qyvantChatPanel");
+        const closeButton = document.getElementById("qyvantChatClose");
+        const messages = document.getElementById("qyvantChatMessages");
+        const form = document.getElementById("qyvantChatForm");
+        const input = document.getElementById("qyvantChatInput");
+        const suggestions = document.getElementById("qyvantChatSuggestions");
+        const profileChatButton = document.querySelector(".chirp-cta");
+
+        // Do not affect pages without the complete Chirp widget.
+        if (!toggle || !panel || !messages || !form || !input) {
+            return;
+        }
+
+        // Prevent duplicate event listeners.
+        if (toggle.dataset.chirpInitialized === "true") return;
+        toggle.dataset.chirpInitialized = "true";
+
+        let isOpen = false;
+        let replyTimer = null;
+
+        function openChat() {
+            panel.hidden = false;
+            panel.classList.add("is-open");
+            toggle.setAttribute("aria-expanded", "true");
+            isOpen = true;
+
+            window.setTimeout(function () {
+                input.focus();
+            }, 100);
+        }
+
+        function closeChat() {
+            panel.classList.remove("is-open");
+            panel.hidden = true;
+            toggle.setAttribute("aria-expanded", "false");
+            isOpen = false;
+        }
+
+        toggle.addEventListener("click", function () {
+            if (isOpen) {
+                closeChat();
+            } else {
+                openChat();
+            }
+        });
+
+        if (closeButton) {
+            closeButton.addEventListener("click", closeChat);
+        }
+
+        if (profileChatButton) {
+            profileChatButton.addEventListener("click", openChat);
+        }
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && isOpen) {
+                closeChat();
+            }
+        });
+
+        function addMessage(text, sender) {
+            const message = document.createElement("div");
+            message.className = "qyvant-chat-message " + sender;
+
+            const bubble = document.createElement("div");
+            bubble.className = "qyvant-chat-bubble";
+            bubble.textContent = text;
+
+            message.appendChild(bubble);
+            messages.appendChild(message);
+            messages.scrollTop = messages.scrollHeight;
+
+            return message;
+        }
+
+        /* =============================================
+           CHIRP ANSWERS — SHORT SERVICE EXPLANATIONS
+        ============================================= */
+
+        function getChirpReply(question) {
+            const text = question.toLowerCase().trim();
+
+            // Digital Marketing
+            if (
+                text.includes("digital marketing") ||
+                text.includes("online marketing")
+            ) {
+                return {
+                    text: "Digital Marketing helps businesses reach the right audience online through digital campaigns, promotions, and marketing strategies.",
+                    link: null
+                };
+            }
+
+            // Social Media and Content
+            if (
+                text.includes("social media") ||
+                text.includes("content creation") ||
+                text.includes("content")
+            ) {
+                return {
+                    text: "Social Media & Content helps businesses build an online presence through planned posts, creative content, consistent messaging, and audience engagement.",
+                    link: null
+                };
+            }
+
+            // Branding and Creative
+            if (
+                text.includes("branding") ||
+                text.includes("brand identity") ||
+                text.includes("graphic design") ||
+                text.includes("creative")
+            ) {
+                return {
+                    text: "Branding & Creative focuses on a business's visual identity, including design elements and creative materials that help make the brand recognizable.",
+                    link: null
+                };
+            }
+
+            // Website-related questions
+            if (
+                text.includes("website") ||
+                text.includes("web development") ||
+                text.includes("web design")
+            ) {
+                return {
+                    text: "Website services focus on creating a professional online presence where customers can learn about your business, services, and contact details.",
+                    link: null
+                };
+            }
+
+            // Ask for all services
+            if (
+                text.includes("services") ||
+                text.includes("what do you offer") ||
+                text.includes("what can you do") ||
+                text.includes("what do you do")
+            ) {
+                return {
+                    text: "We offer Digital Marketing for online promotion, Social Media & Content for audience engagement, and Branding & Creative for your business identity. Which service would you like to know more about?",
+                    link: null
+                };
+            }
+
+            // Appointment
+            if (
+                text.includes("appointment") ||
+                text.includes("schedule") ||
+                text.includes("book")
+            ) {
+                return {
+                    text: "You can start your request through our inquiry page. Share your requirements so the team can review your needs.",
+                    link: "inquiry.html",
+                    linkLabel: "Open inquiry page ↗"
+                };
+            }
+
+            // Inquiry or project
+            if (
+                text.includes("inquiry") ||
+                text.includes("contact") ||
+                text.includes("project") ||
+                text.includes("get started") ||
+                text.includes("let's talk")
+            ) {
+                return {
+                    text: "Have a project in mind? Send us an inquiry with your goals and requirements so our team can review your request.",
+                    link: "inquiry.html",
+                    linkLabel: "Send an inquiry ↗"
+                };
+            }
+
+            // Pricing
+            if (
+                text.includes("price") ||
+                text.includes("pricing") ||
+                text.includes("cost") ||
+                text.includes("rate") ||
+                text.includes("budget")
+            ) {
+                return {
+                    text: "Pricing depends on your project requirements and selected services. Send us an inquiry so we can learn more about what you need.",
+                    link: "inquiry.html",
+                    linkLabel: "Ask about a project ↗"
+                };
+            }
+
+            // Identity
+            if (
+                text.includes("who are you") ||
+                text.includes("your name") ||
+                text.includes("who is chirp")
+            ) {
+                return {
+                    text: "I'm Chirp, QYVANT Solutions' virtual receptionist! I can help you explore our services and find the right next step.",
+                    link: null
+                };
+            }
+
+            // Thanks
+            if (text.includes("thank")) {
+                return {
+                    text: "You're welcome! Would you like to learn about a service or send us an inquiry?",
+                    link: null
+                };
+            }
+
+            // Greetings
+            if (
+                /^(hi|hello|hey|good morning|good afternoon|good evening)\b/.test(text)
+            ) {
+                return {
+                    text: "Hi there! Welcome to QYVANT Solutions. You can ask me about our services, project inquiries, or appointments. How can I help?",
+                    link: null
+                };
+            }
+
+            // Default response
+            return {
+                text: "I can help explain our services or guide you to our inquiry page. You can ask, for example, 'What is Digital Marketing?' or 'What does Branding & Creative do?'",
+                link: null
+            };
+        }
+
+        function showReply(reply) {
+            const message = document.createElement("div");
+            message.className = "qyvant-chat-message bot";
+
+            const bubble = document.createElement("div");
+            bubble.className = "qyvant-chat-bubble";
+            bubble.textContent = reply.text;
+            message.appendChild(bubble);
+
+            if (reply.link) {
+                const link = document.createElement("a");
+                link.className = "qyvant-chat-reply-link";
+                link.href = reply.link;
+                link.textContent = reply.linkLabel || "Learn more ↗";
+                message.appendChild(link);
+            }
+
+            messages.appendChild(message);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        /* =============================================
+           TYPING ANIMATION
+        ============================================= */
+
+        function showTypingIndicator() {
+            const typing = document.createElement("div");
+            typing.className = "qyvant-chat-typing";
+            typing.setAttribute("role", "status");
+            typing.setAttribute("aria-label", "Chirp is typing");
+
+            const bubble = document.createElement("div");
+            bubble.className = "qyvant-chat-typing-bubble";
+
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement("span");
+                dot.setAttribute("aria-hidden", "true");
+                bubble.appendChild(dot);
+            }
+
+            typing.appendChild(bubble);
+            messages.appendChild(typing);
+            messages.scrollTop = messages.scrollHeight;
+
+            return typing;
+        }
+
+        function sendMessage(value) {
+            const question = value.trim();
+            if (!question) return;
+
+            // Cancel an older pending response if necessary.
+            if (replyTimer !== null) {
+                window.clearTimeout(replyTimer);
+                replyTimer = null;
+            }
+
+            const oldTyping = messages.querySelectorAll(
+                ".qyvant-chat-typing"
+            );
+            oldTyping.forEach(function (element) {
+                element.remove();
+            });
+
+            addMessage(question, "user");
+            input.value = "";
+
+            if (suggestions) {
+                suggestions.hidden = true;
+            }
+
+            const typing = showTypingIndicator();
+
+            // Prepare the reply now, then display it after the animation.
+            const reply = getChirpReply(question);
+
+            replyTimer = window.setTimeout(function () {
+                typing.remove();
+                showReply(reply);
+                replyTimer = null;
+            }, 1200);
+        }
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            sendMessage(input.value);
+        });
+
+        if (suggestions) {
+            suggestions
+                .querySelectorAll("[data-chat-question]")
+                .forEach(function (button) {
+                    button.addEventListener("click", function () {
+                        const question = button.getAttribute(
+                            "data-chat-question"
+                        );
+
+                        if (question) {
+                            sendMessage(question);
+                        }
+                    });
+                });
+        }
+
+        console.info("Chirp chat initialized.");
+    }
+
+    // Works whether this script loads before or after DOMContentLoaded.
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initChirpChat, {
+            once: true
+        });
+    } else {
+        initChirpChat();
+    }
+})();
