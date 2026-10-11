@@ -261,7 +261,9 @@
                                 </div>
 
                                 <div class="form-field">
-                                    <label for="phone">Contact number</label>
+                                    <label for="phone">
+                                        Contact Number <span class="required-star">*</span>
+                                    </label>
 
                                     <input
                                         type="tel"
@@ -269,6 +271,7 @@
                                         name="Contact Number"
                                         placeholder="Your contact number"
                                         autocomplete="tel"
+                                        required
                                     >
                                 </div>
 
@@ -454,6 +457,15 @@
                             </p>
 
                         </div>
+
+                        <!-- Inquiry submission status -->
+                        <div
+                            id="formStatus"
+                            class="form-status"
+                            role="status"
+                            aria-live="polite"
+                            hidden
+                        ></div>
 
                         <!-- SUBMIT -->
                         <button type="submit" class="submit-button">
