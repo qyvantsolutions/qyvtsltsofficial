@@ -1686,8 +1686,10 @@ section {
     font-weight: 700;
 }
 
-.form-group label span {
-    color: var(--secondary);
+/*ang command code na ito ay para magpula yung section nayun if hindi nalagyan ng details*/
+.form-group label .required-star {
+    color: #dc2626;
+    font-weight: 700;
 }
 
 .form-group input,
@@ -1728,6 +1730,18 @@ section {
 
 .form-group input:invalid:not(:placeholder-shown) {
     border-color: #cf5555;
+}
+
+/* Required fields with validation errors */
+.form-group.has-error input,
+.form-group.has-error select,
+.form-group.has-error textarea {
+    border-color: #dc2626;
+    background-color: #fff5f5;
+}
+
+.form-group.has-error label {
+    color: #dc2626;
 }
 
 .form-group select {
@@ -3532,5 +3546,105 @@ transition: none;
 
     .form-status.loading::before {
         animation: none;
+    }
+}
+
+
+/* =========================================================
+   QYVANT SOLUTIONS
+   INQUIRY FORM SUBMISSION STATES
+========================================================= */
+
+/* Hide empty status message */
+#formStatus:empty {
+    display: none;
+}
+
+/* Base status message */
+#formStatus {
+    width: 100%;
+    margin: 0 0 22px;
+    padding: 15px 18px;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease;
+}
+
+/* Successful submission */
+#formStatus.success {
+    display: block;
+    color: #176b42;
+    background: #edf9f1;
+    border-color: #b8e7c8;
+}
+
+/* Submission error */
+#formStatus.error {
+    display: block;
+    color: #a12626;
+    background: #fff0f0;
+    border-color: #f1c1c1;
+}
+
+/* Sending/loading state */
+#formStatus.loading {
+    display: block;
+    color: #262262;
+    background: #f1f0ff;
+    border-color: #d5d2ff;
+}
+
+/* Disabled submit button */
+#inquiryForm .submit-button:disabled {
+    opacity: 0.72;
+    cursor: wait;
+    pointer-events: none;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Loading spinner */
+#inquiryForm .submit-button.is-loading
+.submit-button-text::before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 10px;
+    vertical-align: -2px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: inquirySpinner 0.7s linear infinite;
+}
+
+/* Hide arrow while sending */
+#inquiryForm .submit-button.is-loading
+.submit-button-arrow {
+    display: none;
+}
+
+/* Spinner animation */
+@keyframes inquirySpinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Accessibility: reduce animation when requested */
+@media (prefers-reduced-motion: reduce) {
+    #inquiryForm .submit-button.is-loading
+    .submit-button-text::before {
+        animation: none;
+    }
+
+    #formStatus {
+        transition: none;
     }
 }
