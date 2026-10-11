@@ -3648,3 +3648,1511 @@ transition: none;
         transition: none;
     }
 }
+
+/* =========================================
+   QYVANT CHAT RECEPTIONIST
+========================================= */
+
+.qyvant-chat-widget {
+    --chat-primary: #262262;
+    --chat-accent: #92278f;
+    --chat-text: #252238;
+    --chat-muted: #777487;
+    --chat-bg: #ffffff;
+
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 9999;
+    font-family: inherit;
+}
+
+/* Floating Button */
+
+.qyvant-chat-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 54px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(
+        135deg,
+        var(--chat-primary),
+        var(--chat-accent)
+    );
+    color: #ffffff;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(38, 34, 98, 0.25);
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.qyvant-chat-toggle:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 35px rgba(38, 34, 98, 0.32);
+}
+
+.qyvant-chat-toggle-icon {
+    font-size: 22px;
+    line-height: 1;
+}
+
+.qyvant-chat-online-dot,
+.qyvant-chat-status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #65d99a;
+}
+
+
+/* =========================================
+   CHIRP FAIRY DUST ONLINE EFFECT ✨
+========================================= */
+
+.qyvant-chat-online-dot {
+    position: relative;
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #9dffb5;
+    box-shadow:
+        0 0 6px rgba(157, 255, 181, 0.95),
+        0 0 13px rgba(157, 255, 181, 0.65);
+    animation: chirpFairyPulse 1.8s ease-in-out infinite;
+}
+
+/* Magical sparkle particles */
+.qyvant-chat-online-dot::before,
+.qyvant-chat-online-dot::after {
+    content: "✦";
+    position: absolute;
+    color: #e7ffb5;
+    font-size: 10px;
+    line-height: 1;
+    pointer-events: none;
+    text-shadow:
+        0 0 5px #d9ffb0,
+        0 0 10px rgba(255, 255, 255, 0.9);
+}
+
+.qyvant-chat-online-dot::before {
+    top: -7px;
+    right: -5px;
+    animation: chirpFairySparkle 1.6s ease-in-out infinite;
+}
+
+.qyvant-chat-online-dot::after {
+    bottom: -6px;
+    left: -7px;
+    font-size: 7px;
+    animation: chirpFairySparkle 1.3s ease-in-out infinite reverse;
+}
+
+/* Soft magical glow */
+@keyframes chirpFairyPulse {
+    0%, 100% {
+        transform: scale(0.95);
+        box-shadow:
+            0 0 5px rgba(157, 255, 181, 0.7),
+            0 0 10px rgba(157, 255, 181, 0.35);
+    }
+
+    50% {
+        transform: scale(1.15);
+        box-shadow:
+            0 0 8px rgba(157, 255, 181, 1),
+            0 0 18px rgba(157, 255, 181, 0.8);
+    }
+}
+
+/* Twinkling fairy dust */
+@keyframes chirpFairySparkle {
+    0%, 100% {
+        opacity: 0.25;
+        transform: scale(0.55) rotate(0deg);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2) rotate(45deg);
+    }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .qyvant-chat-online-dot,
+    .qyvant-chat-online-dot::before,
+    .qyvant-chat-online-dot::after {
+        animation: none !important;
+    }
+}
+
+
+/* Chat Panel */
+
+.qyvant-chat-panel {
+    position: absolute;
+    right: 0;
+    bottom: 68px;
+    display: flex;
+    flex-direction: column;
+    width: 370px;
+    max-width: calc(100vw - 32px);
+    height: 530px;
+    max-height: calc(100dvh - 115px);
+    overflow: hidden;
+    border: 1px solid rgba(38, 34, 98, 0.12);
+    border-radius: 20px;
+    background: var(--chat-bg);
+    box-shadow: 0 20px 65px rgba(25, 20, 60, 0.22);
+    animation: qyvantChatAppear 0.22s ease;
+}
+
+.qyvant-chat-panel[hidden] {
+    display: none !important;
+}
+
+@keyframes qyvantChatAppear {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Header */
+
+.qyvant-chat-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px;
+    color: #ffffff;
+    background: linear-gradient(
+        135deg,
+        var(--chat-primary),
+        var(--chat-accent)
+    );
+}
+
+.qyvant-chat-avatar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.qyvant-chat-avatar i {
+    position: absolute;
+    right: 0;
+    bottom: 1px;
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--chat-primary);
+    border-radius: 50%;
+    background: #65d99a;
+}
+
+.qyvant-chat-header-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.qyvant-chat-header-info h2 {
+    margin: 0 0 5px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.qyvant-chat-header-info p {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 12px;
+}
+
+.qyvant-chat-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.13);
+    color: #ffffff;
+    font-size: 25px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.qyvant-chat-close:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Message Area */
+
+.qyvant-chat-messages {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px 15px;
+    overflow-y: auto;
+    background: #faf9fd;
+    scroll-behavior: smooth;
+}
+
+.qyvant-chat-message {
+    display: flex;
+    width: 100%;
+}
+
+.qyvant-chat-message.bot {
+    justify-content: flex-start;
+}
+
+.qyvant-chat-message.user {
+    justify-content: flex-end;
+}
+
+.qyvant-chat-bubble {
+    max-width: 88%;
+    padding: 12px 14px;
+    border-radius: 15px;
+    font-size: 13px;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+    white-space: pre-line;
+}
+
+.qyvant-chat-message.bot .qyvant-chat-bubble {
+    border: 1px solid #ece9f4;
+    border-bottom-left-radius: 5px;
+    background: #ffffff;
+    color: var(--chat-text);
+}
+
+.qyvant-chat-message.user .qyvant-chat-bubble {
+    border-bottom-right-radius: 5px;
+    background: var(--chat-primary);
+    color: #ffffff;
+}
+
+/* Links Inside Chat */
+
+.qyvant-chat-bubble a {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--chat-accent);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.qyvant-chat-message.user .qyvant-chat-bubble a {
+    color: #ffffff;
+}
+
+/* Suggested Questions */
+
+.qyvant-chat-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 10px 14px;
+    border-top: 1px solid #efedf5;
+    background: #ffffff;
+}
+
+.qyvant-chat-suggestions button {
+    padding: 8px 11px;
+    border: 1px solid rgba(146, 39, 143, 0.28);
+    border-radius: 999px;
+    background: #ffffff;
+    color: var(--chat-primary);
+    font: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.qyvant-chat-suggestions button:hover {
+    border-color: var(--chat-accent);
+    background: var(--chat-accent);
+    color: #ffffff;
+}
+
+/* Input Form */
+
+.qyvant-chat-form {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 14px;
+    border-top: 1px solid #efedf5;
+    background: #ffffff;
+}
+
+.qyvant-chat-form input {
+    width: 100%;
+    min-width: 0;
+    height: 43px;
+    padding: 0 14px;
+    border: 1px solid #e5e2ed;
+    border-radius: 999px;
+    outline: none;
+    background: #faf9fd;
+    color: var(--chat-text);
+    font: inherit;
+    font-size: 13px;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.qyvant-chat-form input:focus {
+    border-color: var(--chat-accent);
+    box-shadow: 0 0 0 3px rgba(146, 39, 143, 0.1);
+}
+
+.qyvant-chat-form input::placeholder {
+    color: #9995a8;
+}
+
+.qyvant-chat-send {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 43px;
+    height: 43px;
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 50%;
+    background: linear-gradient(
+        135deg,
+        var(--chat-primary),
+        var(--chat-accent)
+    );
+    color: #ffffff;
+    font-size: 17px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.qyvant-chat-send:hover {
+    transform: scale(1.06);
+}
+
+/* Footer */
+
+.qyvant-chat-footer {
+    padding: 0 12px 12px;
+    background: #ffffff;
+    color: var(--chat-muted);
+    font-size: 10px;
+    text-align: center;
+}
+
+/* Accessibility */
+
+.qyvant-chat-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Mobile */
+
+@media (max-width: 480px) {
+    .qyvant-chat-widget {
+        right: 14px;
+        bottom: 14px;
+    }
+
+    .qyvant-chat-toggle {
+        min-height: 50px;
+        padding: 0 16px;
+        font-size: 13px;
+    }
+
+    .qyvant-chat-panel {
+        position: fixed;
+        right: 10px;
+        bottom: 75px;
+        width: calc(100vw - 20px);
+        max-width: none;
+        height: min(560px, calc(100dvh - 100px));
+        max-height: calc(100dvh - 100px);
+        border-radius: 18px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .qyvant-chat-panel {
+        animation: none;
+    }
+
+    .qyvant-chat-toggle,
+    .qyvant-chat-close,
+    .qyvant-chat-suggestions button,
+    .qyvant-chat-send {
+        transition: none;
+    }
+}
+
+.qyvant-chat-avatar {
+    overflow: hidden;
+}
+
+.chirp-avatar-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* =========================================
+   MEET CHIRP — PREMIUM PROFILE SECTION
+========================================= */
+
+.chirp-section {
+    position: relative;
+    isolation: isolate;
+    padding: 110px 0 90px;
+    overflow: hidden;
+    background:
+        radial-gradient(
+            circle at 12% 35%,
+            rgba(146, 39, 143, 0.07),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 90% 75%,
+            rgba(38, 34, 98, 0.06),
+            transparent 30%
+        ),
+        #faf9fd;
+}
+
+/* Subtle background decoration */
+
+.chirp-section::before {
+    content: "";
+    position: absolute;
+    top: 8%;
+    right: -100px;
+    z-index: -1;
+    width: 280px;
+    height: 280px;
+    border: 1px solid rgba(146, 39, 143, 0.09);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.chirp-section::after {
+    content: "";
+    position: absolute;
+    bottom: 5%;
+    left: -130px;
+    z-index: -1;
+    width: 300px;
+    height: 300px;
+    border: 1px solid rgba(38, 34, 98, 0.08);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* Section Heading */
+
+.chirp-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 55px;
+    animation: chirpFadeDown 0.8s ease both;
+}
+
+.chirp-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #92278f;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.2px;
+}
+
+.chirp-eyebrow-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #92278f;
+    box-shadow: 0 0 0 5px rgba(146, 39, 143, 0.1);
+}
+
+.chirp-heading-note {
+    margin: 0;
+    color: #777487;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+/* Main Layout */
+
+.chirp-profile {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    align-items: center;
+    gap: clamp(45px, 7vw, 100px);
+}
+
+/* =========================================
+   LEFT SIDE — IMAGE AND EFFECTS
+========================================= */
+
+.chirp-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 500px;
+    isolation: isolate;
+    animation: chirpImageEntrance 1s ease both;
+}
+
+.chirp-visual-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: -2;
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+    background: rgba(146, 39, 143, 0.16);
+    filter: blur(65px);
+    transform: translate(-50%, -50%);
+    animation: chirpGlowPulse 5s ease-in-out infinite;
+}
+
+/* Decorative Orbits */
+
+.chirp-orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+    border: 1px solid rgba(146, 39, 143, 0.22);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.chirp-orbit-one {
+    width: 390px;
+    height: 390px;
+    transform: translate(-50%, -50%) rotate(-20deg);
+}
+
+.chirp-orbit-two {
+    width: 440px;
+    height: 340px;
+    border-color: rgba(38, 34, 98, 0.16);
+    transform: translate(-50%, -50%) rotate(35deg);
+}
+
+/* Image Frame */
+
+.chirp-image-frame {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: min(100%, 345px);
+    aspect-ratio: 4 / 5;
+    padding: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(146, 39, 143, 0.2);
+    border-radius: 180px 180px 30px 30px;
+    background: linear-gradient(
+        145deg,
+        #ffffff,
+        #f0e9fa 55%,
+        #e8e2f7
+    );
+    box-shadow:
+        0 30px 75px rgba(38, 34, 98, 0.13),
+        inset 0 0 0 5px rgba(255, 255, 255, 0.45);
+    transition:
+        transform 0.45s ease,
+        box-shadow 0.45s ease;
+}
+
+.chirp-image-frame::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    z-index: 1;
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: 170px 170px 22px 22px;
+    pointer-events: none;
+}
+
+.chirp-image-frame:hover {
+    transform: translateY(-7px) rotate(-1deg);
+    box-shadow:
+        0 40px 90px rgba(38, 34, 98, 0.2),
+        0 0 35px rgba(146, 39, 143, 0.12);
+}
+
+.chirp-profile-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 170px 170px 22px 22px;
+}
+
+/* Floating Decorative Stars */
+
+.chirp-spark {
+    position: absolute;
+    z-index: 2;
+    color: #92278f;
+    pointer-events: none;
+    animation: chirpSparkFloat 4s ease-in-out infinite;
+}
+
+.chirp-spark-one {
+    top: 12%;
+    left: 14%;
+    font-size: 30px;
+}
+
+.chirp-spark-two {
+    top: 23%;
+    right: 10%;
+    color: #262262;
+    font-size: 36px;
+    animation-delay: -1.3s;
+}
+
+.chirp-spark-three {
+    right: 14%;
+    bottom: 15%;
+    font-size: 25px;
+    animation-delay: -2.1s;
+}
+
+/* Floating Cards */
+
+.chirp-float-card {
+    position: absolute;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 13px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.91);
+    box-shadow: 0 15px 45px rgba(38, 34, 98, 0.13);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    animation: chirpCardFloat 5s ease-in-out infinite;
+}
+
+.chirp-float-status {
+    top: 16%;
+    right: -3%;
+}
+
+.chirp-float-identity {
+    bottom: 13%;
+    left: -4%;
+    animation-delay: -2.5s;
+}
+
+.chirp-status-icon,
+
+.chirp-identity-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 37px;
+    height: 37px;
+    flex-shrink: 0;
+    overflow: hidden;
+    padding: 3px;
+    border-radius: 12px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.chirp-identity-icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+
+.chirp-status-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.chirp-status-copy strong {
+    color: #26223b;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.chirp-status-copy small {
+    color: #777487;
+    font-size: 10px;
+}
+
+.chirp-live-dot {
+    width: 8px;
+    height: 8px;
+    margin-left: 4px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #37bd80;
+    box-shadow: 0 0 0 4px rgba(55, 189, 128, 0.12);
+}
+
+/* =========================================
+   RIGHT SIDE — ABOUT CHIRP
+========================================= */
+
+.chirp-content {
+    animation: chirpContentEntrance 0.9s ease 0.15s both;
+}
+
+.chirp-content-label {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #92278f;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.chirp-content h2 {
+    margin: 0 0 24px;
+    color: #262262;
+    font-size: clamp(35px, 4.1vw, 57px);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -2px;
+}
+
+.chirp-content h2 span {
+    position: relative;
+    display: inline-block;
+    color: #92278f;
+}
+
+.chirp-content h2 span::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -5px;
+    left: 0;
+    height: 4px;
+    border-radius: 5px;
+    background: linear-gradient(90deg, #92278f, #c99bda);
+    transform-origin: left;
+    animation: chirpUnderline 1s ease 0.8s both;
+}
+
+.chirp-intro {
+    max-width: 510px;
+    margin: 0 0 15px;
+    color: #35304d;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.8;
+}
+
+.chirp-description {
+    max-width: 540px;
+    margin: 0 0 14px;
+    color: #777487;
+    font-size: 13px;
+    line-height: 1.95;
+}
+
+/* Feature List */
+
+.chirp-features {
+    display: grid;
+    gap: 17px;
+    margin-top: 28px;
+    padding-top: 25px;
+    border-top: 1px solid rgba(38, 34, 98, 0.11);
+}
+
+.chirp-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    transition: transform 0.25s ease;
+}
+
+.chirp-feature:hover {
+    transform: translateX(6px);
+}
+
+.chirp-feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 39px;
+    height: 39px;
+    flex-shrink: 0;
+    border: 1px solid rgba(146, 39, 143, 0.15);
+    border-radius: 12px;
+    background: #ffffff;
+    color: #92278f;
+    font-size: 20px;
+    box-shadow: 0 5px 15px rgba(38, 34, 98, 0.05);
+}
+
+.chirp-feature h3 {
+    margin: 1px 0 5px;
+    color: #262262;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.chirp-feature p {
+    margin: 0;
+    color: #777487;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* CTA Button */
+
+.chirp-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 30px;
+    padding: 15px 21px;
+    border: 1px solid #262262;
+    border-radius: 8px;
+    background: #262262;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 22px rgba(38, 34, 98, 0.13);
+    transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.chirp-cta span {
+    font-size: 17px;
+    transition: transform 0.25s ease;
+}
+
+.chirp-cta:hover {
+    border-color: #92278f;
+    background: #92278f;
+    box-shadow: 0 12px 28px rgba(146, 39, 143, 0.22);
+    transform: translateY(-3px);
+}
+
+.chirp-cta:hover span {
+    transform: translate(3px, -3px);
+}
+
+.chirp-small-note {
+    margin: 13px 0 0;
+    color: #9691a5;
+    font-size: 10px;
+    line-height: 1.7;
+}
+
+/* Bottom Accent */
+
+.chirp-bottom-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 85px;
+}
+
+.chirp-bottom-line span {
+    width: 50px;
+    height: 1px;
+    background: rgba(146, 39, 143, 0.3);
+}
+
+.chirp-bottom-line p {
+    margin: 0;
+    color: #9691a5;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes chirpFadeDown {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes chirpImageEntrance {
+    from {
+        opacity: 0;
+        transform: translateX(-35px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes chirpContentEntrance {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes chirpGlowPulse {
+    0%,
+    100% {
+        opacity: 0.65;
+        transform: translate(-50%, -50%) scale(0.94);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.08);
+    }
+}
+
+@keyframes chirpCardFloat {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-9px);
+    }
+}
+
+@keyframes chirpSparkFloat {
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.75;
+    }
+
+    50% {
+        transform: translateY(-10px) rotate(15deg);
+        opacity: 1;
+    }
+}
+
+@keyframes chirpUnderline {
+    from {
+        transform: scaleX(0);
+    }
+
+    to {
+        transform: scaleX(1);
+    }
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+========================================= */
+
+@media (max-width: 900px) {
+    .chirp-section {
+        padding: 85px 0 70px;
+    }
+
+    .chirp-profile {
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        gap: 35px;
+    }
+
+    .chirp-visual {
+        min-height: 420px;
+    }
+
+    .chirp-image-frame {
+        width: min(100%, 290px);
+    }
+
+    .chirp-orbit-one {
+        width: 320px;
+        height: 320px;
+    }
+
+    .chirp-orbit-two {
+        width: 350px;
+        height: 290px;
+    }
+
+    .chirp-float-status {
+        right: -2%;
+    }
+
+    .chirp-float-identity {
+        left: -2%;
+    }
+
+    .chirp-content h2 {
+        font-size: clamp(32px, 4.5vw, 45px);
+        letter-spacing: -1.5px;
+    }
+}
+
+@media (max-width: 700px) {
+    .chirp-section {
+        padding: 70px 0 60px;
+    }
+
+    .chirp-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 25px;
+    }
+
+    .chirp-profile {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .chirp-visual {
+        min-height: 420px;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 430px;
+    }
+
+    .chirp-image-frame {
+        width: min(75%, 300px);
+    }
+
+    .chirp-orbit-one {
+        width: 330px;
+        height: 330px;
+    }
+
+    .chirp-orbit-two {
+        width: 350px;
+        height: 285px;
+    }
+
+    .chirp-float-status {
+        top: 14%;
+        right: 0;
+    }
+
+    .chirp-float-identity {
+        bottom: 12%;
+        left: 0;
+    }
+
+    .chirp-content h2 {
+        font-size: clamp(36px, 9vw, 48px);
+    }
+
+    .chirp-intro {
+        font-size: 15px;
+    }
+
+    .chirp-description {
+        font-size: 13px;
+    }
+
+    .chirp-bottom-line {
+        gap: 10px;
+        margin-top: 55px;
+    }
+
+    .chirp-bottom-line span {
+        width: 25px;
+    }
+
+    .chirp-bottom-line p {
+        font-size: 8px;
+        letter-spacing: 1px;
+    }
+}
+
+@media (max-width: 380px) {
+    .chirp-visual {
+        min-height: 365px;
+    }
+
+    .chirp-image-frame {
+        width: 72%;
+    }
+
+    .chirp-orbit-one {
+        width: 280px;
+        height: 280px;
+    }
+
+    .chirp-orbit-two {
+        width: 300px;
+        height: 245px;
+    }
+
+    .chirp-float-card {
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .chirp-status-copy strong {
+        font-size: 10px;
+    }
+
+    .chirp-status-copy small {
+        font-size: 9px;
+    }
+}
+
+/* Respect reduced-motion preferences */
+
+@media (prefers-reduced-motion: reduce) {
+    .chirp-section *,
+    .chirp-section *::before,
+    .chirp-section *::after {
+        animation: none !important;
+        scroll-behavior: auto !important;
+        transition: none !important;
+    }
+}
+
+/* =========================================
+   CHIRP CHAT RESPONSE ANIMATION
+========================================= */
+
+.qyvant-chat-typing {
+    display: flex;
+    align-items: flex-end;
+    gap: 9px;
+    width: fit-content;
+    max-width: 90%;
+    animation: chirpTypingAppear 0.25s ease both;
+}
+
+.qyvant-chat-typing-avatar {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 2px solid rgba(146, 39, 143, 0.2);
+    border-radius: 50%;
+    background: #f0e9fa;
+    box-shadow: 0 3px 10px rgba(38, 34, 98, 0.1);
+}
+
+.qyvant-chat-typing-avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.qyvant-chat-typing-bubble {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-height: 42px;
+    padding: 0 15px;
+    border: 1px solid #ece9f4;
+    border-radius: 15px 15px 15px 5px;
+    background: #ffffff;
+    box-shadow: 0 3px 12px rgba(38, 34, 98, 0.04);
+}
+
+.qyvant-chat-typing-bubble span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #92278f;
+    animation: chirpTypingBounce 1.1s infinite ease-in-out;
+}
+
+.qyvant-chat-typing-bubble span:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.qyvant-chat-typing-bubble span:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+@keyframes chirpTypingBounce {
+    0%, 60%, 100% {
+        opacity: 0.4;
+        transform: translateY(0);
+    }
+
+    30% {
+        opacity: 1;
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes chirpTypingAppear {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .qyvant-chat-typing,
+    .qyvant-chat-typing-bubble span {
+        animation: none !important;
+    }
+}
+
+
+/* =========================================
+   CHIRP CHAT BUTTON PROFILE PICTURE
+========================================= */
+
+.qyvant-chat-toggle-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    overflow: hidden;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.75);
+    box-shadow: 0 3px 10px rgba(38, 34, 98, 0.15);
+}
+
+.chirp-toggle-avatar {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+
+/* QYVANT Company Logo in Chirp Identity Section */
+
+.chirp-identity-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 5px;
+}
+
+.chirp-identity-icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+
+/* =========================================
+   CHIRP FLOATING PNG — NO FRAME
+========================================= */
+
+.chirp-image-frame {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+    padding: 0;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: visible;
+}
+
+.chirp-profile-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    background: transparent;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    animation: chirpFloating 3.5s ease-in-out infinite;
+    will-change: transform;
+}
+
+@keyframes chirpFloating {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .chirp-profile-image {
+        animation: none;
+    }
+}
+
+
+/* =========================================
+   WEBSITE IMAGE PROTECTION NOTICE
+========================================= */
+
+.image-protection-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 30px;
+    z-index: 999999;
+    width: max-content;
+    max-width: calc(100vw - 32px);
+    padding: 14px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 14px;
+    background: rgba(38, 34, 98, 0.96);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.5;
+    text-align: center;
+    box-shadow: 0 12px 35px rgba(38, 34, 98, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate(-50%, 12px);
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease,
+        visibility 0.25s ease;
+}
+
+.image-protection-toast.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+}
+
+.image-protection-toast strong {
+    display: block;
+    margin-bottom: 3px;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.image-protection-toast span {
+    display: block;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 480px) {
+    .image-protection-toast {
+        bottom: 20px;
+        padding: 12px 16px;
+        font-size: 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .image-protection-toast {
+        transition: none;
+    }
+}
