@@ -1,15 +1,12 @@
+
 /* =========================================================
    QYVANT SOLUTIONS
    MAIN JAVASCRIPT
    Pages: index.html, inquiry.html
+   FormSubmit uses standard POST - NO AJAX
 ========================================================= */
 
 "use strict";
-
-
-/* =========================================================
-   INITIALIZE WEBSITE
-========================================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
     initMobileMenu();
@@ -21,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
     initHeroMovement();
     initNavbarScrollEffect();
     initFormEnhancements();
+    initSubmissionReturnMessage();
 });
 
 
@@ -41,7 +39,9 @@ function initMobileMenu() {
 
     function closeMenu() {
         navLinks.classList.remove("open");
+        navLinks.classList.remove("is-open");
         menuButton.classList.remove("active");
+
         menuButton.setAttribute("aria-expanded", "false");
         menuButton.setAttribute("aria-label", "Open navigation menu");
     }
@@ -49,6 +49,7 @@ function initMobileMenu() {
     function openMenu() {
         navLinks.classList.add("open");
         menuButton.classList.add("active");
+
         menuButton.setAttribute("aria-expanded", "true");
         menuButton.setAttribute("aria-label", "Close navigation menu");
     }
@@ -221,7 +222,7 @@ function initServicePreselection() {
 
 /* =========================================================
    6. INQUIRY FORM
-   NORMAL FORMSUBMIT SUBMISSION
+   STANDARD FORMSUBMIT - NO AJAX
 ========================================================= */
 
 function initInquiryForm() {
@@ -229,159 +230,49 @@ function initInquiryForm() {
 
     if (!form) return;
 
-    /*
-     * IMPORTANT:
-     * No submit event listener is attached here.
-     * No preventDefault().
-     * No fetch().
-     * No AJAX.
-     *
-     * The browser submits the form directly to FormSubmit
-     * using the action and method in inquiry.html.
-     */
-
-    const submitButton = form.querySelector(
-        'button[type="submit"], input[type="submit"]'
-    );
-
-    /*
-     * Keep service selection styling.
-     * This does not interfere with form submission.
-     */
-
+    const statusMessage = document.querySelector("#formStatus");
     const serviceCheckboxes = form.querySelectorAll(
         'input[name="Services"]'
     );
 
-    serviceCheckboxes.forEach(function (checkbox) {
-        checkbox.addEventListener("change", function () {
+    function updateServiceSelection() {
+        const checkedServices = form.querySelectorAll(
+            'input[name="Services"]:checked'
+        );
+
+        serviceCheckboxes.forEach(function (checkbox) {
             const option = checkbox.closest(".service-option");
 
             if (option) {
-                option.classList.toggle(
-                    "selected",
-                    checkbox.checked
-                );
-            }
-
-            updateServiceValidation(form);
-        });
-    });
-
-    /*
-     * Validate that at least one service is selected.
-     * This uses the browser's native validation API.
-     */
-
-    serviceCheckboxes.forEach(function (checkbox) {
-        checkbox.addEventListener("invalid", function () {
-            const statusMessage = document.querySelector("#formStatus");
-
-            if (statusMessage) {
-                showFormStatus(
-                    statusMessage,
-                    "error",
-                    "Please select at least one service."
-                );
+                option.classList.toggle("selected", checkbox.checked);
             }
         });
-    });
 
-    /*
-     * Update service validation when the form is submitted.
-     * This listener does NOT cancel the submission.
-     */
+        const firstService = serviceCheckboxes[0];
 
-    form.addEventListener("submit", function () {
-        const selectedServices = form.querySelectorAll(
-            'input[name="Services"]:checked'
-        );
-
-        const privacyConsent = form.querySelector("#privacyConsent");
-        const statusMessage = document.querySelector("#formStatus");
-
-        if (selectedServices.length === 0) {
-            const firstService = form.querySelector(
-                'input[name="Services"]'
+        if (firstService) {
+            firstService.setCustomValidity(
+                checkedServices.length === 0
+                    ? "Please select at least one service."
+                    : ""
             );
-
-            if (firstService) {
-                firstService.setCustomValidity(
-                    "Please select at least one service."
-                );
-            }
-
-            if (statusMessage) {
-                showFormStatus(
-                    statusMessage,
-                    "error",
-                    "Please select at least one service."
-                );
-            }
-
-            return;
-        }
-
-        if (privacyConsent && !privacyConsent.checked) {
-            if (statusMessage) {
-                showFormStatus(
-                    statusMessage,
-                    "error",
-                    "Please agree to the privacy consent before submitting."
-                );
-            }
-
-            return;
-        }
-
-        const honeypot = form.querySelector('[name="_honey"]');
-
-        if (honeypot && honeypot.value.trim() !== "") {
-            return;
-        }
-
-        /*
-         * If browser validation has passed, show a brief
-         * status message. Do not disable the submit button.
-         * Allow the browser's normal form submission.
-         */
-
-        if (submitButton && statusMessage) {
-            showFormStatus(
-                statusMessage,
-                "loading",
-                "Sending your inquiry..."
-            );
-        }
-    });
-
-    /*
-     * Remove the custom validity message when a service
-     * is selected so native browser validation can proceed.
-     */
-
-    function updateServiceValidation(currentForm) {
-        const checkedServices = currentForm.querySelectorAll(
-            'input[name="Services"]:checked'
-        );
-
-        const firstService = currentForm.querySelector(
-            'input[name="Services"]'
-        );
-
-        if (firstService && checkedServices.length > 0) {
-            firstService.setCustomValidity("");
         }
     }
 
-    /*
-     * Clear visual field errors while the user edits fields.
-     */
+    serviceCheckboxes.forEach(function (checkbox) {
+        checkbox.addEventListener("change", function () {
+            updateServiceSelection();
+            clearFormStatus(statusMessage);
+        });
+    });
+
+    updateServiceSelection();
 
     form.querySelectorAll("input, textarea, select").forEach(
         function (field) {
             field.addEventListener("input", function () {
                 clearFieldError(field);
+                clearFormStatus(statusMessage);
             });
 
             field.addEventListener("change", function () {
@@ -389,35 +280,116 @@ function initInquiryForm() {
             });
         }
     );
+    
+    // Highlight all invalid fields when the user tries to submit.
+    form.addEventListener("invalid", function (event) {
+        const field = event.target;
+
+        if (!(field instanceof HTMLElement)) return;
+
+        if (field.id === "privacyConsent") {
+            const consent = field.closest(".privacy-consent");
+
+            if (consent) {
+                consent.classList.add("has-error");
+            }
+
+            return;
+        }
+
+        const wrapper = field.closest(".form-field, .form-field-full");
+
+        if (wrapper) {
+            wrapper.classList.add("has-error");
+
+            let error = wrapper.querySelector(".form-error");
+
+            if (!error) {
+                error = document.createElement("small");
+                error.className = "form-error";
+                error.setAttribute("role", "alert");
+                wrapper.appendChild(error);
+            }
+
+            error.textContent =
+                field.validationMessage || "This field is required.";
+        }
+    }, true);
+
+    // Remove the red highlight after a field becomes valid.
+    form.querySelectorAll("input, textarea, select").forEach(function (field) {
+        function updateFieldError() {
+            if (field.id === "privacyConsent") {
+                if (field.checked) {
+                    field.closest(".privacy-consent")?.classList.remove("has-error");
+                }
+                return;
+            }
+
+            if (field.checkValidity()) {
+                clearFieldError(field);
+            }
+        }
+
+        field.addEventListener("input", updateFieldError);
+        field.addEventListener("change", updateFieldError);
+    });
+
 }
 
 
 /* =========================================================
-   7. FORM FIELD ERROR HELPERS
+   7. SUCCESS MESSAGE AFTER RETURNING FROM FORMSUBMIT
 ========================================================= */
 
-function showFieldError(field, message) {
-    if (!field) return;
+function initSubmissionReturnMessage() {
+    const params = new URLSearchParams(window.location.search);
 
-    const wrapper = field.closest(".form-field, .form-field-full");
+    if (params.get("submitted") !== "true") return;
 
-    if (!wrapper) return;
+    const form = document.querySelector("#inquiryForm");
+    const statusMessage = document.querySelector("#formStatus");
 
-    wrapper.classList.add("has-error");
+    if (form) {
+        form.reset();
 
-    let error = wrapper.querySelector(".form-error");
+        form.querySelectorAll(".service-option").forEach(function (option) {
+            option.classList.remove("selected");
+        });
 
-    if (!error) {
-        error = document.createElement("small");
-        error.className = "form-error";
-        error.setAttribute("role", "alert");
-
-        wrapper.appendChild(error);
+        form.querySelectorAll('input[name="Services"]').forEach(
+            function (checkbox) {
+                checkbox.checked = false;
+            }
+        );
     }
 
-    error.textContent = message;
+    if (statusMessage) {
+        showFormStatus(
+            statusMessage,
+            "success",
+            "Your inquiry has been submitted successfully. Thank you for contacting QYVANT Solutions!"
+        );
+
+        statusMessage.scrollIntoView({
+            behavior: prefersReducedMotion() ? "auto" : "smooth",
+            block: "center"
+        });
+    }
+
+    if (window.history && window.history.replaceState) {
+        window.history.replaceState(
+            null,
+            document.title,
+            window.location.pathname + window.location.hash
+        );
+    }
 }
 
+
+/* =========================================================
+   8. FIELD ERROR HELPERS
+========================================================= */
 
 function clearFieldError(field) {
     if (!field) return;
@@ -466,7 +438,7 @@ function focusFirstInvalidField(form) {
 
 
 /* =========================================================
-   8. FORM STATUS HELPERS
+   9. FORM STATUS HELPERS
 ========================================================= */
 
 function showFormStatus(element, type, message) {
@@ -497,7 +469,7 @@ function clearFormStatus(element) {
 
 
 /* =========================================================
-   9. REDUCED MOTION HELPER
+   10. REDUCED MOTION
 ========================================================= */
 
 function prefersReducedMotion() {
@@ -508,7 +480,7 @@ function prefersReducedMotion() {
 
 
 /* =========================================================
-   10. SUBTLE HERO MOVEMENT
+   11. HERO MOVEMENT
 ========================================================= */
 
 function initHeroMovement() {
@@ -544,7 +516,7 @@ function initHeroMovement() {
 
 
 /* =========================================================
-   11. NAVBAR SCROLL EFFECT
+   12. NAVBAR SCROLL EFFECT
 ========================================================= */
 
 function initNavbarScrollEffect() {
@@ -568,7 +540,7 @@ function initNavbarScrollEffect() {
 
 
 /* =========================================================
-   12. FORM ENHANCEMENTS
+   13. FORM ENHANCEMENTS
 ========================================================= */
 
 function initFormEnhancements() {
