@@ -980,7 +980,6 @@ function initQyvantChatReceptionist() {
             toast.classList.remove("is-visible");
         }, 2600);
     }
-
     // Disable the usual right-click menu on images.
     document.addEventListener("contextmenu", function (event) {
         const image = event.target.closest("img");
