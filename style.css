@@ -1,4 +1,3 @@
-
 /* =========================================================
    QYVANT SOLUTIONS
    MAIN STYLESHEET
@@ -5303,4 +5302,35 @@ transition: none;
     .qyvant-chat-typing-bubble span {
         animation: none !important;
     }
+}
+
+
+/* =========================================================
+   FORMSUBMIT AJAX - INQUIRY FORM STATUS
+========================================================= */
+
+.inquiry-page #formStatus {
+    overflow-wrap: anywhere;
+    transition: opacity 0.2s ease;
+}
+
+.inquiry-page #formStatus:empty {
+    display: none;
+}
+
+.inquiry-page #formStatus.success,
+.inquiry-page #formStatus.error,
+.inquiry-page #formStatus.loading {
+    display: block;
+    margin-top: 20px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.inquiry-page .submit-button:disabled {
+    cursor: wait;
+    opacity: 0.7;
+    transform: none;
 }
