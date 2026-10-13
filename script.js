@@ -30,9 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
 ========================================================= */
 
 function getInquiryForm() {
-    return document.querySelector(
-        'form[action*="formsubmit.co"]'
-    );
+    return document.querySelector("#inquiryForm");
 }
 
 
@@ -231,66 +229,103 @@ function initServicePreselection() {
 }
 
 
+
 /* =========================================================
    6. INQUIRY FORM
-   NORMAL FORMSUBMIT SUBMISSION
+   FORMSUBMIT AJAX SUBMISSION
 ========================================================= */
 
 function initInquiryForm() {
     const form = getInquiryForm();
 
-    if (!form) return;
+    if (!form || form.dataset.ajaxInitialized === "true") return;
 
-    const serviceCheckboxes = form.querySelectorAll(
-        'input[name="Services"]'
+    form.dataset.ajaxInitialized = "true";
+
+    const status = document.getElementById("formStatus");
+    const submitButton = form.querySelector('button[type="submit"]');
+    const submitButtonText = submitButton
+        ? submitButton.querySelector(".submit-button-text")
+        : null;
+
+    const originalButtonText = submitButtonText
+        ? submitButtonText.textContent
+        : "Send My Inquiry";
+
+    const serviceCheckboxes = Array.from(
+        form.querySelectorAll('input[name="Services"]')
     );
 
     const privacyConsent = form.querySelector("#privacyConsent");
 
-    /*
-     * Update service checkbox styling and validation.
-     * No form submission is intercepted.
-     */
+    let isSubmitting = false;
 
     function updateServiceValidation() {
-        const hasSelectedService = Array.from(
-            serviceCheckboxes
-        ).some(function (checkbox) {
-            return checkbox.checked;
-        });
-
         const firstService = serviceCheckboxes[0];
 
-        if (firstService) {
-            firstService.setCustomValidity(
-                hasSelectedService
-                    ? ""
-                    : "Please select at least one service."
-            );
+        if (!firstService) return;
+
+        const hasSelectedService = serviceCheckboxes.some(
+            checkbox => checkbox.checked
+        );
+
+        firstService.setCustomValidity(
+            hasSelectedService
+                ? ""
+                : "Please select at least one service."
+        );
+    }
+
+    function updateServiceAppearance() {
+        serviceCheckboxes.forEach(function (checkbox) {
+            const option = checkbox.closest(".service-option");
+
+            if (option) {
+                option.classList.toggle("selected", checkbox.checked);
+            }
+        });
+    }
+
+    function setSubmittingState(submitting) {
+        if (!submitButton) return;
+
+        submitButton.disabled = submitting;
+        submitButton.setAttribute(
+            "aria-busy",
+            submitting ? "true" : "false"
+        );
+
+        if (submitButtonText) {
+            submitButtonText.textContent = submitting
+                ? "Sending Your Inquiry..."
+                : originalButtonText;
+        }
+    }
+
+    function displayStatus(type, message) {
+        showFormStatus(status, type, message);
+
+        if (status) {
+            status.scrollIntoView({
+                behavior: prefersReducedMotion() ? "auto" : "smooth",
+                block: "center"
+            });
         }
     }
 
     serviceCheckboxes.forEach(function (checkbox) {
         checkbox.addEventListener("change", function () {
-            const option = checkbox.closest(".service-option");
-
-            if (option) {
-                option.classList.toggle(
-                    "selected",
-                    checkbox.checked
-                );
-            }
-
+            updateServiceAppearance();
             updateServiceValidation();
         });
     });
 
+    updateServiceAppearance();
     updateServiceValidation();
 
-    /*
-     * Native browser validation for required fields.
-     * The browser handles the actual form submission.
-     */
+    if (privacyConsent) {
+        privacyConsent.required = true;
+    }
 
     form.querySelectorAll("input, textarea, select").forEach(
         function (field) {
@@ -304,15 +339,133 @@ function initInquiryForm() {
         }
     );
 
-    /*
-     * Display a notice if privacy consent is not checked.
-     * The required attribute should also be present in the HTML.
-     */
+    form.querySelectorAll(
+        'input[type="text"], input[type="email"], textarea'
+    ).forEach(function (field) {
+        field.addEventListener("blur", function () {
+            field.value = field.value.trim();
+        });
+    });
 
-    if (privacyConsent && !privacyConsent.required) {
-        privacyConsent.required = true;
-    }
+    form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        if (isSubmitting) return;
+
+        updateServiceValidation();
+
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            focusFirstInvalidField(form);
+            return;
+        }
+
+        clearFormErrors(form);
+        clearFormStatus(status);
+
+        isSubmitting = true;
+        setSubmittingState(true);
+
+        displayStatus(
+            "loading",
+            "Sending your inquiry. Please wait..."
+        );
+
+        try {
+            const action = form.getAttribute("action");
+
+            if (!action || !action.includes("formsubmit.co/ajax/")) {
+                throw new Error(
+                    "The FormSubmit AJAX URL is missing or incorrect."
+                );
+            }
+
+            /*
+             * FormData.entries() preserves multiple values such as
+             * several selected service checkboxes.
+             */
+            const payload = {};
+
+            new FormData(form).forEach(function (value, key) {
+                if (Object.prototype.hasOwnProperty.call(payload, key)) {
+                    if (!Array.isArray(payload[key])) {
+                        payload[key] = [payload[key]];
+                    }
+
+                    payload[key].push(value);
+                } else {
+                    payload[key] = value;
+                }
+            });
+
+            const response = await fetch(action, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            let result;
+
+            try {
+                result = await response.json();
+            } catch (parseError) {
+                throw new Error(
+                    "FormSubmit returned an unreadable response. Please try again."
+                );
+            }
+
+            const successValue = String(
+                result.success ?? ""
+            ).toLowerCase();
+
+            const succeeded =
+                response.ok &&
+                (
+                    successValue === "true" ||
+                    successValue === "1"
+                );
+
+            if (!succeeded) {
+                throw new Error(
+                    result.message ||
+                    "FormSubmit could not confirm your inquiry. Please try again."
+                );
+            }
+
+            form.reset();
+
+            updateServiceAppearance();
+            updateServiceValidation();
+            clearFormErrors(form);
+
+            displayStatus(
+                "success",
+                "Your inquiry was accepted by FormSubmit. Thank you! Our team will review your submission."
+            );
+
+            if (status) {
+                status.focus({ preventScroll: true });
+            }
+
+        } catch (error) {
+            console.error("QYVANT Inquiry AJAX Error:", error);
+
+            displayStatus(
+                "error",
+                error.message ||
+                "We could not confirm your inquiry. Please check your internet connection and try again."
+            );
+
+        } finally {
+            isSubmitting = false;
+            setSubmittingState(false);
+        }
+    });
 }
+
 
 
 /* =========================================================
