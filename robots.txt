@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://qyvantsolutions.github.io/qyvtsltsofficial/sitemap.xml
